@@ -1,0 +1,231 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class dateType
+{
+private:
+	int day;
+	int month;
+	int year;
+public:
+	void setDate(int m, int d, int y);
+	int getMonth();
+	int getYear();
+	int getDay();
+	string getMonthAsString();
+	bool isLeapYear();
+	int compareTo(dateType n);
+	void addDaysToDate(int num);
+	void printDate();
+	void printDateWithString();
+	dateType();
+	dateType(int m, int d, int y);
+};
+
+int main()
+{
+	dateType one;
+	cout << "Date One" << endl;
+	one.setDate(1, 13, 2012); // calls the set date functions which makes sure that the date is a correct date and if it isn't a correct date 
+								// it will restore that value to it's default value. The leap year function will be called inside the set date
+								// function. 
+	one.printDate(); // this will print out the correct date if the date above was incorrectly entered, but if it was correctly entered, it 
+						// should print out the date above. this also calls all of the int get... functions.
+	one.printDateWithString();// will print out the same date as above, but instead of the month being and int value, it will be a string.
+								// it will use the getmonthasastring function, as well as the getday and getyear functions.
+	cout << endl;
+
+	dateType two(2, 27, 1582);
+	cout << "Date Two" << endl;
+	two.printDate();
+	two.printDateWithString();
+	cout << endl;
+
+	cout << "Comparing the dates, 0 means equal, \n1 means Date Two is a later date, \n-1 means Date two is a earlier date" << endl;
+	cout << "The return value is: "<< one.compareTo(two) << endl; //had trouble with this, left more of a description below next to the compare to
+																// function header, please help if you can.
+	cout << endl;
+
+	cout << "Adding to Date One" << endl;
+	one.addDaysToDate(13); //adds the days to the date.
+	one.printDate();
+}
+
+void dateType::setDate(int m, int d, int y)
+{
+	if(m<1 || m>12) //testing to make sure the month isn't less than one and more than 12
+	{
+		cout << "Sorry, that is not a correct month, it is going to be changed to January" << endl;
+	}
+	else
+	{
+		month = m;
+	}
+	if(y<1582) // can't go back before this calender was made, so testing for that.
+	{
+		cout << "You can't go back in time that far! The year will be changed to 1582." << endl;
+	}
+	else
+	{
+		year = y;
+	}
+	if(m==4 || m==6 || m==9 ||m==11)
+	{
+		if(d<1 || d>30)
+		{
+			cout << "Sorry, that is not a correct day, it is going to be changed to the first" << endl;
+		}
+		else
+		{
+			day = d;
+		}
+	}
+	else if(m==2)
+	{
+		if(isLeapYear() == true) // these test to make sure if it is a leap year or not. 
+		{
+			if(d<1 || d>29)
+			{
+				cout << "Sorry, that is not a correct day, it is going to be changed to the first" << endl;
+			}
+			else
+			{
+				day = d;
+			}
+		}
+		else if(isLeapYear() == false)
+		{
+			if(d<1 || d>28)
+			{
+			cout << "Sorry, that is not a correct day, it is going to be changed to the first" << endl;
+			}
+			else
+			{
+				day = d;
+			}
+		}
+		else
+		{
+			day = d;
+		}
+	}
+	else
+	{
+		if(d<1 || d>31)
+		{
+			cout << "Sorry, that is not a correct day, it is going to be changed to the first" << endl;
+		}
+		else
+		{
+			day = d;
+		}
+	}
+
+}
+int dateType::getMonth()
+{
+	return month;
+}
+int dateType::getYear()
+{
+	return year;
+}
+int dateType::getDay()
+{
+	return day;
+}
+string dateType::getMonthAsString()
+{
+	string m;
+	int n;
+	n = month;
+	string months[12] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", 
+		"October", "November", "December"}; //use an array to store these, 
+	n--;
+	m = months[n];
+	return m;
+}
+bool dateType::isLeapYear()
+{
+	if(year % 400 == 0)
+	{
+		return true;
+	}
+	else if(year % 100 == 0)
+	{
+		return false;
+	}
+	else if(year % 4 == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+int dateType::compareTo(dateType n) // this is supposed to print out a 0, 1, or -1. It does that when I use this code, which doesn't work right
+									// but when i uncomment out those lines of codes, it returns the year 2012 instead. I have no idea what is 
+									// wrong but i tried absolutely everything i could think of to fix it, and nothing would work. Do you think 
+									// you can help me with this, Kate?
+{
+	if((n.getMonth() == getMonth()) && (n.getDay() == getDay()) && (n.getYear() == getYear()))
+	{
+		return 0;
+	}
+	else if((n.getYear() > getYear() && n.getMonth() > getMonth() && n.getDay() > getDay())
+		/*||  (n.getYear() == getYear() && n.getMonth() > getMonth() && n.getDay() > getDay()) 
+		||  (n.getYear() == getYear() && n.getMonth() == getMonth() && n.getDay() > getDay())*/)
+	{
+		return 1;
+	}
+	else if((n.getYear() < getYear() && n.getMonth() < getMonth() && n.getDay() < getDay())
+		/*||  (n.getYear() == getYear() && n.getMonth() < getMonth() && n.getDay() < getDay())
+		||  (n.getYear() == getYear() && n.getMonth() == getMonth() && n.getDay() < getDay())*/)
+	{
+		return -1;
+	}
+} 
+void dateType::addDaysToDate(int num)
+{
+	day+=num;
+	if((month == 4 || month == 6 || month == 9 || month == 11) && day>30)
+	{
+		month++;
+		day = day - 30;
+	}
+	else if(month == 2 && isLeapYear() == true && day>29)
+	{
+		month++;
+		day = day - 29;
+	}
+	else if(month == 2 && isLeapYear() == false && day>28)
+	{
+		month++;
+		day = day - 28;
+	}
+	else if((month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 12) && day>31)
+	{
+		month++;
+		day = day - 31;
+	}
+}
+void dateType::printDate() // prints date by using the get functions
+{
+	cout << getMonth() << "/" << getDay() << "/" << getYear() << endl;
+}
+void dateType::printDateWithString()
+{
+	cout << getMonthAsString() << " " << getDay() << ", " << getYear() << endl;
+}
+dateType::dateType() // sets default values for member variables
+{
+	month = 1;
+	day = 1;
+	year = 1582;
+}
+dateType::dateType(int m, int d, int y) 
+{
+	setDate(m, d, y);
+}
